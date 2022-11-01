@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok/constants.dart';
+import 'package:tiktok/controllers/auth_controller.dart';
 import 'package:tiktok/views/widgets/text_input_field.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -47,9 +48,7 @@ class RegisterScreen extends StatelessWidget {
                 Positioned(
                   bottom: -10,
                   left: 80,
-                  child: IconButton(icon: const Icon(Icons.add_a_photo), onPressed: () { 
-                    print('pick icon');
-                   },),
+                  child: IconButton(icon: const Icon(Icons.add_a_photo), onPressed: () => authController.pickImage()),
                 )
               ],
             ),
@@ -75,7 +74,7 @@ class RegisterScreen extends StatelessWidget {
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: TextInputField(controller: _passwordController, labelText: 'Password', icon: Icons.lock),
+              child: TextInputField(controller: _passwordController, labelText: 'Password', icon: Icons.lock, isObscure: true, ),
             ),
             const SizedBox(
               height: 30,
@@ -91,9 +90,7 @@ class RegisterScreen extends StatelessWidget {
                 )
               ),
               child: InkWell(
-                onTap: () {
-                  print('register user');
-                },
+                onTap: () => authController.registerUser(_usernameController.text, _emailController.text, _passwordController.text, authController.profilePhoto),
                 child: const Center(
                   child: Text('Register', style: TextStyle(
                     fontSize: 20,
