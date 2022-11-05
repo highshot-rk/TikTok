@@ -104,3 +104,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  # asset for images
+  assets:
+    - assets/images/default_profile.png

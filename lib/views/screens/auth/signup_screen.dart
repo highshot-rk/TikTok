@@ -1,14 +1,27 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok/constants.dart';
 import 'package:tiktok/controllers/auth_controller.dart';
+import 'package:tiktok/views/screens/auth/login_screen.dart';
 import 'package:tiktok/views/widgets/text_input_field.dart';
 
-class RegisterScreen extends StatelessWidget {
+import '../../common/page_transition.dart';
+
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
+  @override
+  _RegisterScreen createState() => _RegisterScreen();
+}
+
+class _RegisterScreen extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
-  RegisterScreen({Key? key}) : super(key: key);
+
+  ImageProvider avatarPath = const AssetImage('assets/images/default_profile.png');
 
   @override
   Widget build(BuildContext context) {
@@ -38,17 +51,23 @@ class RegisterScreen extends StatelessWidget {
             const SizedBox(
               height: 25,
             ),
-                        Stack(
+            Stack(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   backgroundColor: Colors.black,
                   radius: 64,
-                  backgroundImage: NetworkImage('https://www.pngitem.com/pimgs/m/150-1503945_transparent-user-png-default-user-image-png-png.png'),
+                  backgroundImage: avatarPath,
                 ),
                 Positioned(
                   bottom: -10,
                   left: 80,
-                  child: IconButton(icon: const Icon(Icons.add_a_photo), onPressed: () => authController.pickImage()),
+                  child: IconButton(icon: const Icon(Icons.add_a_photo), onPressed: () => {
+                    authController.pickImage().then((pickedImage) => {
+                      setState(() {
+                        avatarPath = FileImage(pickedImage.value!);
+                      }),
+                    }),
+                  }),
                 )
               ],
             ),
@@ -109,9 +128,9 @@ class RegisterScreen extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    print('navigating user');
-                  },
+                  onTap: () => Navigator.of(context).push(
+                    PageTransition.createRoute(LoginScreen())
+                  ),
                   child: const Text(
                     'Login',
                     style: TextStyle(

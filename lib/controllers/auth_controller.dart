@@ -35,12 +35,12 @@ class Authcontroller extends GetxController {
     }
   }
 
-  void pickImage() async {
+  Future<Rx<File?>> pickImage() async {
     final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
     if(pickedImage != null) {
       Get.snackbar('Profile Picture', 'You have successfully selected your profile picture!');
     }
-    _pickedImage = Rx<File?>(File(pickedImage!.path));
+    return _pickedImage = Rx<File?>(File(pickedImage!.path));
   }
   
   // upload to firebase storage
@@ -74,7 +74,6 @@ class Authcontroller extends GetxController {
     try {
       if(email.isNotEmpty && password.isNotEmpty) {
         await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-        print('Login success');
       } else {
         Get.snackbar('Error Login Account','Please enter all the fields');
       }

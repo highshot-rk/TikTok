@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok/constants.dart';
+import 'package:tiktok/views/common/page_transition.dart';
+import 'package:tiktok/views/screens/auth/signup_screen.dart';
 import 'package:tiktok/views/widgets/text_input_field.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -54,6 +55,7 @@ class LoginScreen extends StatelessWidget {
             ),
             Container(
               width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
               height: 50,
               decoration: const BoxDecoration(
                 color: buttonColor,
@@ -81,9 +83,9 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    print('navigating user');
-                  },
+                  onTap: () =>  Navigator.of(context).push(
+                    PageTransition.createRoute(RegisterScreen())
+                  ),
                   child: const Text(
                     'Register',
                     style: TextStyle(

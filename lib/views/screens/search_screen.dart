@@ -1,14 +1,19 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:tiktok/constants.dart';
 import 'package:tiktok/controllers/search_controller.dart';
 import 'package:get/get.dart';
 import 'package:tiktok/models/user.dart';
 import 'package:tiktok/views/screens/profile_screen.dart';
 
-class SearchScreen extends StatelessWidget {
-  SearchScreen({super.key});
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
+
+  @override
+  _SearchScreen createState() => _SearchScreen();
+}
+class _SearchScreen extends State<SearchScreen> {
+  
+  List<User> searchedUsers = [];
+
   SearchController searchController = Get.put(SearchController());
   @override
   Widget build(BuildContext context) {
@@ -24,10 +29,16 @@ class SearchScreen extends StatelessWidget {
               color: Colors.white,
             )
           ),
-          onFieldSubmitted: (value) => searchController.searchUser(value),
+          onFieldSubmitted: (value) => { 
+            searchController.searchUser(value).then((users) => {
+              setState(() {
+                searchedUsers = users;
+              }),
+            }),
+          },
         ),
       ),
-      body: searchController.searchedUsers.isEmpty ? (
+      body: searchedUsers.isEmpty ? (
         const Center(
           child: Text(
             'Search for users',
@@ -40,7 +51,7 @@ class SearchScreen extends StatelessWidget {
         )
       ) : (
         ListView.builder(
-          itemCount: searchController.searchedUsers.length,
+          itemCount: searchedUsers.length,
           itemBuilder: (context, index) {
             User user = searchController.searchedUsers[index];
             return InkWell(

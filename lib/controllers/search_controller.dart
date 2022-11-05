@@ -9,18 +9,18 @@ class SearchController extends GetxController {
 
   List<User> get searchedUsers => _searchedUsers.value;
 
-  searchUser(String typedUser) async {
-    print(typedUser);
+  Future<List<User>> searchUser(String typedUser) async {
+    List<User> retVal = [];
     _searchedUsers.bindStream(firestore
         .collection('users')
         .where('name', isGreaterThanOrEqualTo: typedUser)
         .snapshots()
         .map((QuerySnapshot query) {
-      List<User> retVal = [];
       for (var elem in query.docs) {
         retVal.add(User.fromSnap(elem));
       }
       return retVal;
     }));
+    return retVal;
   }
 }
