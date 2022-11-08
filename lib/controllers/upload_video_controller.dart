@@ -45,10 +45,7 @@ class UploadVideoController extends GetxController {
       var allDocs = await firestore.collection('videos').get();
       int len = allDocs.docs.length;
       String videoUrl = await _uploadVideoToStorage("Video $len", videoPath);
-      return;
       String thumbnail = await _uploadImageToStorage("Video $len", videoPath);
-
-      print(videoUrl);
 
       Video video = Video(
         username: (userDoc.data()! as Map<String, dynamic>)['name'],
