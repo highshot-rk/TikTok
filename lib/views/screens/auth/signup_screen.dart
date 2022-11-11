@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:tiktok/constants.dart';
 import 'package:tiktok/controllers/auth_controller.dart';
+import 'package:tiktok/controllers/face_detector_controller.dart';
 import 'package:tiktok/views/screens/auth/login_screen.dart';
 import 'package:tiktok/views/widgets/text_input_field.dart';
 
@@ -20,6 +23,7 @@ class _RegisterScreen extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  final FaceDetectorController _faceController = Get.put(FaceDetectorController());
 
   ImageProvider avatarPath = const AssetImage('assets/images/default_profile.png');
 
@@ -63,6 +67,11 @@ class _RegisterScreen extends State<RegisterScreen> {
                   left: 80,
                   child: IconButton(icon: const Icon(Icons.add_a_photo), onPressed: () => {
                     authController.pickImage().then((pickedImage) => {
+                      _faceController.processImage(InputImage.fromFile(pickedImage.value!)).then((val) => {
+                        print("---------------"),
+                        print(val),
+                        print('+++++++++++++')
+                      }),
                       setState(() {
                         avatarPath = FileImage(pickedImage.value!);
                       }),
