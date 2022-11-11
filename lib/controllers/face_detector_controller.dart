@@ -11,7 +11,6 @@ class FaceDetectorController extends GetxController {
 
   Future<String> processImage(inputImage) async {
     final faces = await _faceDetector.processImage(inputImage);
-    print(faces);
     if (faces.isNotEmpty) {
       return detectSmile(faces.first.smilingProbability);
     }
@@ -20,10 +19,10 @@ class FaceDetectorController extends GetxController {
   }
 
   Future<Uint8List> bytesFromNetworkImage(String imageUrl) async {
-  final ByteData data = await NetworkAssetBundle(Uri.parse(imageUrl)).load(imageUrl);
-  final Uint8List bytes = data.buffer.asUint8List();
-  return bytes;
-}
+    final ByteData data = await NetworkAssetBundle(Uri.parse(imageUrl)).load(imageUrl);
+    final Uint8List bytes = data.buffer.asUint8List();
+    return bytes;
+  }
 
   String detectSmile(smileProb) {
     if (smileProb > 0.86) {

@@ -1,10 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
-import 'package:tiktok/controllers/face_detector_controller.dart';
 import 'package:video_player/video_player.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 class VideoPlayerItem extends StatefulWidget {
   final String videoUrl;
@@ -20,29 +17,6 @@ class VideoPlayerItem extends StatefulWidget {
 
 class _VideoPlayerItemState extends State<VideoPlayerItem> {
   late VideoPlayerController videoPlayerController;
-  final FaceDetectorController _faceController = FaceDetectorController();
-
-  test() async {
-      final uint8list = await VideoThumbnail.thumbnailData(
-        video: widget.videoUrl,
-        imageFormat: ImageFormat.JPEG,
-        maxWidth: 400,
-        maxHeight: 400,
-        quality: 25,
-        timeMs: 100,
-      );
-
-    _faceController.processImage(InputImage.fromBytes(bytes: uint8list!, inputImageData: InputImageData(
-      imageRotation: InputImageRotation.rotation0deg,
-      inputImageFormat: InputImageFormat.nv21,
-      size: const Size(120, 300), planeData: null
-    ) )).then((val) => {
-      print("---------------"),
-      print(val),
-      print('+++++++++++++')
-    });
-
-  }
 
   @override
   void initState() {
@@ -51,7 +25,6 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
       ..initialize().then((value) {
         videoPlayerController.play();
         videoPlayerController.setVolume(1);
-        test();
       });
   }
 

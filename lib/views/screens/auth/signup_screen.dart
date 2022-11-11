@@ -67,11 +67,6 @@ class _RegisterScreen extends State<RegisterScreen> {
                   left: 80,
                   child: IconButton(icon: const Icon(Icons.add_a_photo), onPressed: () => {
                     authController.pickImage().then((pickedImage) => {
-                      _faceController.processImage(InputImage.fromFile(pickedImage.value!)).then((val) => {
-                        print("---------------"),
-                        print(val),
-                        print('+++++++++++++')
-                      }),
                       setState(() {
                         avatarPath = FileImage(pickedImage.value!);
                       }),
