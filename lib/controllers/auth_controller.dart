@@ -1,3 +1,4 @@
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
@@ -7,16 +8,20 @@ import 'dart:io';
 import 'package:tiktok/constants.dart';
 import 'package:tiktok/models/user.dart' as model;
 import 'package:tiktok/views/screens/auth/login_screen.dart';
+import 'package:tiktok/views/screens/auth/signup_screen.dart';
 import 'package:tiktok/views/screens/home_screen.dart';
 
 class Authcontroller extends GetxController {
 
   static Authcontroller instance = Get.find();
 
-  late Rx<File?> _pickedImage;
+  // ignore: avoid_init_to_null
+  late Rx<File?>? _pickedImage = null;
   late Rx<User?> _user;
 
-  File? get profilePhoto => _pickedImage.value;
+
+  // ignore: prefer_null_aware_operators
+  File? get profilePhoto => _pickedImage != null ? _pickedImage?.value : null;
   User get user => _user.value!;
 
   @override
@@ -53,12 +58,12 @@ class Authcontroller extends GetxController {
     return downloadUrl;
   }
   // register user
-  void registerUser(String username, String email, String password, File? image) async {
+  void registerUser(String username, String email, String password, File? image, String? bod, Gender? gender) async {
     try {
-      if(username.isNotEmpty && email.isNotEmpty && password.isNotEmpty && image != null) {
+      if(username.isNotEmpty && email.isNotEmpty && password.isNotEmpty && image != null && bod != null && gender != null) {
         UserCredential cred = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
         String downloadUrl = await _uploadToStorage(image);
-        model.User user = model.User(email: email, name: username, uid: cred.user!.uid, profilePhoto: downloadUrl);
+        model.User user = model.User(email: email, name: username, uid: cred.user!.uid, profilePhoto: downloadUrl, birthday: bod, gender: EnumToString.convertToString(gender));
         await firestore.collection('users').doc(cred.user!.uid).set(user.toJson());
       } else {
         Get.snackbar('Error Creating Account','Please enter all the fields');

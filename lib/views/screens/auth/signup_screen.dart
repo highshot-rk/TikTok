@@ -1,14 +1,7 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:intl/intl.dart';
 import 'package:textfield_datepicker/textfield_datepicker.dart';
 import 'package:tiktok/constants.dart';
-import 'package:tiktok/controllers/auth_controller.dart';
-import 'package:tiktok/controllers/face_detector_controller.dart';
 import 'package:tiktok/views/screens/auth/login_screen.dart';
 import 'package:tiktok/views/widgets/text_input_field.dart';
 
@@ -21,16 +14,15 @@ class RegisterScreen extends StatefulWidget {
   _RegisterScreen createState() => _RegisterScreen();
 }
 
-enum Gender { man, woman }
+enum Gender { male, female }
 class _RegisterScreen extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _BODController = TextEditingController();
-  final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _bodController = TextEditingController();
 
-  ImageProvider avatarPath = const AssetImage('assets/images/default_profile.png');
-  Gender? _gender = Gender.man;
+  late ImageProvider avatarPath;
+  Gender? _gender = Gender.male;
 
   @override
   Widget build(BuildContext context) {
@@ -63,10 +55,9 @@ class _RegisterScreen extends State<RegisterScreen> {
             ),
             Stack(
               children: [
-                CircleAvatar(
-                  backgroundColor: Colors.black,
+                const CircleAvatar(
+                  backgroundColor: Colors.white54,
                   radius: 64,
-                  backgroundImage: avatarPath,
                 ),
                 Positioned(
                   bottom: -10,
@@ -100,9 +91,6 @@ class _RegisterScreen extends State<RegisterScreen> {
                                 labelStyle: TextStyle(fontSize: 20),
                                 labelText: 'Birthday',
                                 prefixIcon: Icon(Icons.calendar_month),
-                                // border: OutlineInputBorder(
-                                //   borderSide: BorderSide(color: Colors.white, width: 10)
-                                // ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.all(Radius.circular(5)),
                                   borderSide: BorderSide(
@@ -125,11 +113,11 @@ class _RegisterScreen extends State<RegisterScreen> {
                                   )
                                 )
                             ),
-                textfieldDatePickerController: _BODController,
+                textfieldDatePickerController: _bodController,
                 materialDatePickerFirstDate: DateTime.now(),
                 materialDatePickerLastDate: DateTime(2099),
                 materialDatePickerInitialDate: DateTime.now(),
-                preferredDateFormat: DateFormat('yyyy/MM/dd') ,
+                preferredDateFormat: DateFormat('dd/MM/yyyy') ,
                 cupertinoDatePickerMaximumDate: DateTime(2099),
                 cupertinoDatePickerMinimumDate: DateTime(1990),
                 cupertinoDatePickerBackgroundColor: Colors.white,
@@ -164,7 +152,7 @@ class _RegisterScreen extends State<RegisterScreen> {
                       ListTile(
                         title: const Text('Man'),
                         leading: Radio(
-                          value: Gender.man,
+                          value: Gender.male,
                           groupValue: _gender,
                           onChanged: (Gender? value) {
                             setState(() {
@@ -179,7 +167,7 @@ class _RegisterScreen extends State<RegisterScreen> {
                   ListTile(
                     title: const Text('Woman'),
                     leading: Radio(
-                      value: Gender.woman,
+                      value: Gender.female,
                       groupValue: _gender,
                       onChanged: (Gender? value) {
                         setState(() {
@@ -204,7 +192,7 @@ class _RegisterScreen extends State<RegisterScreen> {
                 )
               ),
               child: InkWell(
-                onTap: () => authController.registerUser(_usernameController.text, _emailController.text, _passwordController.text, authController.profilePhoto),
+                onTap: () => authController.registerUser(_usernameController.text, _emailController.text, _passwordController.text, authController.profilePhoto, _bodController.text, _gender),
                 child: const Center(
                   child: Text('Register', style: TextStyle(
                     fontSize: 20,
