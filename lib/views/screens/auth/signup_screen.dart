@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+import 'package:intl/intl.dart';
+import 'package:textfield_datepicker/textfield_datepicker.dart';
 import 'package:tiktok/constants.dart';
 import 'package:tiktok/controllers/auth_controller.dart';
 import 'package:tiktok/controllers/face_detector_controller.dart';
@@ -19,19 +21,23 @@ class RegisterScreen extends StatefulWidget {
   _RegisterScreen createState() => _RegisterScreen();
 }
 
+enum Gender { man, woman }
 class _RegisterScreen extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
-  final FaceDetectorController _faceController = Get.put(FaceDetectorController());
+  final TextEditingController _BODController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
 
   ImageProvider avatarPath = const AssetImage('assets/images/default_profile.png');
+  Gender? _gender = Gender.man;
 
   @override
   Widget build(BuildContext context) {
     
     return Scaffold(
-      body: Container(
+      body: SingleChildScrollView(
+        child:       Container(
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -86,6 +92,54 @@ class _RegisterScreen extends State<RegisterScreen> {
             const SizedBox(
               height: 25
             ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: TextfieldDatePicker(
+                textfieldDatePickerPadding: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: const InputDecoration(
+                                labelStyle: TextStyle(fontSize: 20),
+                                labelText: 'Birthday',
+                                prefixIcon: Icon(Icons.calendar_month),
+                                // border: OutlineInputBorder(
+                                //   borderSide: BorderSide(color: Colors.white, width: 10)
+                                // ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                                  borderSide: BorderSide(
+                                      color:Colors.white60,
+                                      width: 1,
+                                  )
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                                  borderSide: BorderSide(
+                                      color:Colors.white60,
+                                      width: 1,
+                                  )
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                                  borderSide: BorderSide(
+                                      color:Colors.white60,
+                                      width: 1,
+                                  )
+                                )
+                            ),
+                textfieldDatePickerController: _BODController,
+                materialDatePickerFirstDate: DateTime.now(),
+                materialDatePickerLastDate: DateTime(2099),
+                materialDatePickerInitialDate: DateTime.now(),
+                preferredDateFormat: DateFormat('yyyy/MM/dd') ,
+                cupertinoDatePickerMaximumDate: DateTime(2099),
+                cupertinoDatePickerMinimumDate: DateTime(1990),
+                cupertinoDatePickerBackgroundColor: Colors.white,
+                cupertinoDatePickerMaximumYear: 2099,
+                cupertinoDateInitialDateTime: DateTime.now()
+              ),
+            ),
+            const SizedBox(
+              height: 25
+            ),
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -98,6 +152,43 @@ class _RegisterScreen extends State<RegisterScreen> {
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 20),
               child: TextInputField(controller: _passwordController, labelText: 'Password', icon: Icons.lock, isObscure: true, ),
+            ),
+                        const SizedBox(
+              height: 25
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    child:
+                      ListTile(
+                        title: const Text('Man'),
+                        leading: Radio(
+                          value: Gender.man,
+                          groupValue: _gender,
+                          onChanged: (Gender? value) {
+                            setState(() {
+                              _gender = value;
+                            });
+                          }),
+                      ),
+                  ),
+                ),
+                Expanded(
+                  child:
+                  ListTile(
+                    title: const Text('Woman'),
+                    leading: Radio(
+                      value: Gender.woman,
+                      groupValue: _gender,
+                      onChanged: (Gender? value) {
+                        setState(() {
+                          _gender = value;
+                        });
+                      }),
+                  )
+                ),
+              ],
             ),
             const SizedBox(
               height: 30,
@@ -147,6 +238,7 @@ class _RegisterScreen extends State<RegisterScreen> {
             )
           ],
         ),
+      ),
       )
     );
   }
